@@ -1,56 +1,71 @@
 package com.blz;
 public class EmployeeWages {
-    final int IS_PART_TIME = 1;
-    final int IS_FULL_TIME = 2;
+    public static final int IS_PART_TIME = 1;
+    public static final int IS_FULL_TIME = 2;
 
-    final String companyName;
-    final int empRatePerHour;
-    final int numOfWorkingDays;
-    final int maxHoursPerMonth;
-    int totalEmpWage;
+    public class CompanyEmpWage
+    {
+        public final String company;
+        public final int empRatePerHour;
+        public final int numOfWorkingDays;
+        public final int maxHoursPerMonth;
+        public CompanyEmpWage(String company, int empRatePerHour, int numOfWorkingDays, int maxHoursPerMonth)
+        {
+            this.company = company;
+            this.empRatePerHour = empRatePerHour;
+            this.numOfWorkingDays = numOfWorkingDays;
+            this.maxHoursPerMonth = maxHoursPerMonth;
+        }
 
-    public EmployeeWages(String companyName, int empRatePerHour, int numOfWorkingDays, int maxHoursPerMonth) {
-        this.companyName = companyName;
-        this.empRatePerHour = empRatePerHour;
-        this.numOfWorkingDays = numOfWorkingDays;
-        this.maxHoursPerMonth = maxHoursPerMonth;
     }
+    private int numOfCompany =0;
+    private CompanyEmpWage[] companyEmpWageArray;
 
-    public void computeEmpWage() {
-        int empHrs = 0, totalEmpHrs = 0, totalWorkingDays = 0;
-        while (totalEmpHrs <= maxHoursPerMonth &&
-                totalWorkingDays < numOfWorkingDays) {
+    public EmployeeWages()
+    {
+        companyEmpWageArray = new CompanyEmpWage[5];
+    }
+    private void computeEmpWage()
+    {
+        for (int i = 0; i < numOfCompany; i++)
+        {
+            int totalEmpWage = calculateEmpHrs(companyEmpWageArray[i]);
+            System.out.println("Total Emp Wage for Company " + companyEmpWageArray[i].company + " is : " + totalEmpWage);
+        }
+    }
+    private void addCompanyEmpWage(String company, int empRatePerHour, int numOfWorkingDays, int maxHoursPerMonth)
+    {
+        companyEmpWageArray[numOfCompany] = new CompanyEmpWage(company, empRatePerHour, numOfWorkingDays, maxHoursPerMonth);
+        numOfCompany++;
+    }
+    private int calculateEmpHrs(CompanyEmpWage companyEmpWage)
+    {
+        int empHrs = 0;
+        int totalEmpHrs = 0;
+        int totalWorkingDays = 0;
+        while (totalEmpHrs <= companyEmpWage.maxHoursPerMonth && totalWorkingDays < companyEmpWage.numOfWorkingDays) {
             totalWorkingDays++;
             int empCheck = (int) Math.floor(Math.random() * 10) % 3;
             switch (empCheck) {
-                case IS_PART_TIME:
-                    empHrs = 4;
-                    break;
                 case IS_FULL_TIME:
                     empHrs = 8;
+                    break;
+                case IS_PART_TIME:
+                    empHrs = 4;
                     break;
                 default:
                     empHrs = 0;
             }
             totalEmpHrs += empHrs;
-            System.out.println("Day: " + totalWorkingDays + " Emp Hr: " + empHrs);
+            System.out.println("Day : " + totalWorkingDays + " Emp Hrs : " + empHrs);
         }
-        totalEmpWage = totalEmpHrs * empRatePerHour;
-
-
+        return totalEmpHrs * companyEmpWage.empRatePerHour;
     }
-
-    public String toString() {
-        return "Total Emp Wage for Company: " + companyName + " is: " + totalEmpWage;
-    }
-
-    public static void main(String[] args) {
-
-        EmployeeWages dMart = new EmployeeWages("D-Mart", 20, 20, 100);
-        EmployeeWages reliance = new EmployeeWages("Infosis", 10, 10, 100);
-        dMart.computeEmpWage();
-        System.out.println(dMart);
-        reliance.computeEmpWage();
-        System.out.println(reliance);
+    public static void main(String args[])
+    {
+        EmployeeWages employeeWageBuilder = new EmployeeWages();
+        employeeWageBuilder.addCompanyEmpWage("D-Mart", 20, 20, 100);
+        employeeWageBuilder.addCompanyEmpWage("Infosis", 10, 10, 100);
+        employeeWageBuilder.computeEmpWage();
     }
 }
